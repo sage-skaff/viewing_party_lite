@@ -79,14 +79,12 @@ RSpec.describe 'New Users Page', type: :feature do
     and see an alert that the passwords do not match' do
     visit '/register'
 
-    expect(page).to have_no_content('Email has already been taken')
-
-    fill_in :name,	with: 'Tammy'
-    fill_in :email,	with: 'chad1@gmail.com'
+    fill_in :name,	with: 'Max'
+    fill_in :email,	with: 'WhatsForDinner@gmail.com'
     fill_in :password,	with: 'password324'
     fill_in :password_confirmation,	with: 'password123'
     click_button 'Register'
 
-    expect(page).to have_content('Passwords do not match')
+    expect(page).to have_content("Error: Password confirmation doesn't match Password")
   end
 end
