@@ -18,12 +18,14 @@ RSpec.describe 'New Users Page', type: :feature do
     end
   end
 
-  it "has a form to register a new user, that includes name, email (which is unique) and a
+  it "has a form to register a new user, that includes name, email (which is unique), password, password confirmation and a
     'Register' button" do
     visit new_user_path
 
     expect(page).to have_field(:name)
     expect(page).to have_field(:email)
+    expect(page).to have_field(:password)
+    expect(page).to have_field(:password_confirmation)
     expect(page).to have_button('Register')
   end
 
@@ -33,6 +35,8 @@ RSpec.describe 'New Users Page', type: :feature do
 
     fill_in :name,	with: 'Max'
     fill_in :email,	with: 'WhatsForDinner@gmail.com'
+    fill_in :password,	with: 'password123'
+    fill_in :password_confirmation,	with: 'password123'
     click_button 'Register'
 
     @user = User.last
@@ -48,6 +52,8 @@ RSpec.describe 'New Users Page', type: :feature do
 
     fill_in :name,	with: ''
     fill_in :email,	with: 'pieisdelici0us@gmail.com'
+    fill_in :password,	with: 'password124'
+    fill_in :password_confirmation,	with: 'password124'
     click_button 'Register'
 
     expect(current_path).to eq('/register')
@@ -62,8 +68,25 @@ RSpec.describe 'New Users Page', type: :feature do
 
     fill_in :name,	with: 'Tammy'
     fill_in :email,	with: 'chad1@gmail.com'
+    fill_in :password,	with: 'password324'
+    fill_in :password_confirmation,	with: 'password324'
     click_button 'Register'
 
     expect(page).to have_content('Email has already been taken')
+  end
+
+  it 'if password confirmation does not match password, the user will be redirected back to the /register page
+    and see an alert that the passwords do not match' do
+    visit '/register'
+
+    expect(page).to have_no_content('Email has already been taken')
+
+    fill_in :name,	with: 'Tammy'
+    fill_in :email,	with: 'chad1@gmail.com'
+    fill_in :password,	with: 'password324'
+    fill_in :password_confirmation,	with: 'password123'
+    click_button 'Register'
+
+    expect(page).to have_content('Passwords do not match')
   end
 end
