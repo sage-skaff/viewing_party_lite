@@ -87,4 +87,20 @@ RSpec.describe 'New Users Page', type: :feature do
 
     expect(page).to have_content("Error: Password confirmation doesn't match Password")
   end
+
+  it "if the form is not completely filled in, the user will be redirected back to the '/register' page
+    and see an alert that the Password can't be blank" do
+    visit '/register'
+
+    expect(page).to have_no_content("Password can't be blank")
+
+    fill_in :name,	with: 'Max'
+    fill_in :email,	with: 'pieisdelici0us@gmail.com'
+    fill_in :password,	with: ''
+    fill_in :password_confirmation,	with: 'password124'
+    click_button 'Register'
+
+    expect(current_path).to eq('/register')
+    expect(page).to have_content("Password can't be blank")
+  end
 end
