@@ -25,7 +25,7 @@ describe 'Log In Page' do
     visit login_path
 
     fill_in :email, with: 'rey@test.com'
-    fill_in :password, with: '123'
+    fill_in :password, with: 'wrong_password'
 
     click_on 'Log In'
 

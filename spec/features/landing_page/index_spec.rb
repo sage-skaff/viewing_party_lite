@@ -52,4 +52,13 @@ RSpec.describe 'Landing Page' do
       expect(current_path).to eq(root_path)
     end
   end
+
+  it 'should contain a link to go to login page' do
+    visit root_path
+    within('#dashboard') do
+      expect(page).to have_link('Login')
+      click_link('Login')
+      expect(current_path).to eq(login_path)
+    end
+  end
 end
