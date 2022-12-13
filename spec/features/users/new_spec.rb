@@ -2,9 +2,9 @@ require 'rails_helper'
 
 RSpec.describe 'New Users Page', type: :feature do
   before(:each) do
-    @user1 = User.create!(name: 'Chad', email: 'chad1@gmail.com')
-    @user2 = User.create!(name: 'Jessica', email: 'jessica2@gmail.com')
-    @user3 = User.create!(name: 'Fiona', email: 'Fiona3@gmail.com')
+    @user1 = User.create!(name: 'Chad', email: 'chad1@gmail.com', password: 'chad123')
+    @user2 = User.create!(name: 'Jessica', email: 'jessica2@gmail.com', password: 'jess123')
+    @user3 = User.create!(name: 'Fiona', email: 'Fiona3@gmail.com', password: 'fiona123')
   end
 
   it 'should contain title of Viewing Party and a Home link that will redirect the user
@@ -18,12 +18,14 @@ RSpec.describe 'New Users Page', type: :feature do
     end
   end
 
-  it "has a form to register a new user, that includes name, email (which is unique) and a
+  it "has a form to register a new user, that includes name, email (which is unique), password, password confirmation and a
     'Register' button" do
     visit new_user_path
 
     expect(page).to have_field(:name)
     expect(page).to have_field(:email)
+    expect(page).to have_field(:password)
+    expect(page).to have_field(:password_confirmation)
     expect(page).to have_button('Register')
   end
 
@@ -33,6 +35,8 @@ RSpec.describe 'New Users Page', type: :feature do
 
     fill_in :name,	with: 'Max'
     fill_in :email,	with: 'WhatsForDinner@gmail.com'
+    fill_in :password,	with: 'password123'
+    fill_in :password_confirmation,	with: 'password123'
     click_button 'Register'
 
     @user = User.last
@@ -48,6 +52,8 @@ RSpec.describe 'New Users Page', type: :feature do
 
     fill_in :name,	with: ''
     fill_in :email,	with: 'pieisdelici0us@gmail.com'
+    fill_in :password,	with: 'password124'
+    fill_in :password_confirmation,	with: 'password124'
     click_button 'Register'
 
     expect(current_path).to eq('/register')
@@ -62,8 +68,39 @@ RSpec.describe 'New Users Page', type: :feature do
 
     fill_in :name,	with: 'Tammy'
     fill_in :email,	with: 'chad1@gmail.com'
+    fill_in :password,	with: 'password324'
+    fill_in :password_confirmation,	with: 'password324'
     click_button 'Register'
 
     expect(page).to have_content('Email has already been taken')
+  end
+
+  it 'if password confirmation does not match password, the user will be redirected back to the /register page
+    and see an alert that the passwords do not match' do
+    visit '/register'
+
+    fill_in :name,	with: 'Max'
+    fill_in :email,	with: 'WhatsForDinner@gmail.com'
+    fill_in :password,	with: 'password324'
+    fill_in :password_confirmation,	with: 'password123'
+    click_button 'Register'
+
+    expect(page).to have_content("Error: Password confirmation doesn't match Password")
+  end
+
+  it "if the form is not completely filled in, the user will be redirected back to the '/register' page
+    and see an alert that the Password can't be blank" do
+    visit '/register'
+
+    expect(page).to have_no_content("Password can't be blank")
+
+    fill_in :name,	with: 'Max'
+    fill_in :email,	with: 'pieisdelici0us@gmail.com'
+    fill_in :password,	with: ''
+    fill_in :password_confirmation,	with: 'password124'
+    click_button 'Register'
+
+    expect(current_path).to eq('/register')
+    expect(page).to have_content("Password can't be blank")
   end
 end

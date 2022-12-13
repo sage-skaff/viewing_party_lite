@@ -2,9 +2,9 @@ require 'rails_helper'
 
 RSpec.describe 'Top Rated Movies' do
   before(:each) do
-    @user1 = User.create!(name: 'Chad', email: 'chad1@gmail.com')
-    @user2 = User.create!(name: 'Jessica', email: 'jessica2@gmail.com')
-    @user3 = User.create!(name: 'Fiona', email: 'Fiona3@gmail.com')
+    @user1 = User.create!(name: 'Chad', email: 'chad1@gmail.com', password: 'chad123')
+    @user2 = User.create!(name: 'Jessica', email: 'jessica2@gmail.com', password: 'jess123')
+    @user3 = User.create!(name: 'Fiona', email: 'Fiona3@gmail.com', password: 'fiona123')
   end
 
   describe 'happy path' do

@@ -15,6 +15,9 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(user_params)
+
+    @user.email.downcase!
+
     if @user.save
       redirect_to user_path(@user.id)
     else
@@ -26,6 +29,6 @@ class UsersController < ApplicationController
   private
 
   def user_params
-    params.permit(:name, :email)
+    params.permit(:name, :email, :password, :password_confirmation)
   end
 end
